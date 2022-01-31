@@ -117,8 +117,8 @@ class OrderDetailsController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *  If the order amount is 0, the order is therefore void
-     * 
+     *  If their is a order assigned, and its total amount is 0, the order is therefore void,
+     *  else the order details total is deducted from the order amount
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
