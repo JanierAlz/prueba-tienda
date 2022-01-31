@@ -53,7 +53,7 @@ class AuthController extends Controller
         $token = $user->createToken('myAppToken')->plainTextToken;
 
         $response = [
-            'user' => 'logged in, welcome!',
+            'user' => 'logged in, welcome! use the issued token to access the api',
             'token' => $token,
         ];
 
