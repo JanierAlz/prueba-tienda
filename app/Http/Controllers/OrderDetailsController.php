@@ -47,7 +47,7 @@ class OrderDetailsController extends Controller
             'quantity' => $attr['quantity'],
             'price' => $product->price,
             'total' => $product->price * $attr['quantity'],
-            'order_id' => ''
+            'order_id' => null
         ]);
 
         return response([
@@ -108,7 +108,10 @@ class OrderDetailsController extends Controller
         $deduct = $details->total;
         $details->update($attr);
         $add = $attr['total'];
-        Order::updateOrder($details->order_id, $deduct, $add);
+        if(isset($details->order_id)) {
+            Order::updateOrder($details->order_id, $deduct, $add);
+        }
+        
         return response($details);
     }
 
@@ -122,19 +125,20 @@ class OrderDetailsController extends Controller
     public function destroy($id)
     {
         $detail = OrderDetails::where('id', $id)->first();
-        $order = Order::where('id', $detail->order_id)->first();
-
-        $total = $order->amount - $detail->price;
-
-        if($total == 0) {
-            $order->update([
-                'status' => 'void'
-            ]);
-        } else {
-            $order->update([
-                'amount' => $total
-            ]);
+        if(isset($detail->order_id)) {
+            $order = Order::where('id', $detail->order_id)->first();
+            $total = $order->amount - $detail->price;
+            if($total == 0) {
+                $order->update([
+                    'status' => 'void'
+                ]);
+            } else {
+                $order->update([
+                    'amount' => $total
+                ]);
+            }
         }
+        
         return OrderDetails::destroy($id);
 
     }
