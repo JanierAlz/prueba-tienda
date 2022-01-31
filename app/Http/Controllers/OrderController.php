@@ -90,6 +90,7 @@ class OrderController extends Controller
                     ->get();
         $items = [];
         $content = '';
+        $response = [];
         foreach($orders as $order) {
             $items[] =[
                 'product_id' => $order->product_id,
@@ -111,6 +112,11 @@ class OrderController extends Controller
                     'user' => $order->name
                 ];
             }
+        }
+        if(empty($response)) {
+            return response([
+                'message' => 'Order not found'
+            ], 404);
         }
         foreach($response as $order) {
             foreach($order as $key => $values) {
